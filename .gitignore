@@ -1,0 +1,40 @@
+# --- Environment ---
+.env
+.env.local
+*.env
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.sqlite3
+
+# --- Django ---
+media/
+staticfiles/
+/backend/static/
+
+# --- Node ---
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+npm-debug.log*
+yarn-error.log*
+
+# --- Editors / OS ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+docker-compose.override.yml
