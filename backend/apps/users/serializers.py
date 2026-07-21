@@ -81,7 +81,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     
     def validate(self, attrs):
         data = super().validate(attrs)
-        data["users"] = UserSerializer(self.user).data
+        data["user"] = UserSerializer(self.user).data
         return data
 
 
