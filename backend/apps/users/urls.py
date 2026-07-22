@@ -11,7 +11,7 @@ urlpatterns = [
     path("refresh",TokenRefreshView.as_view(), name="refresh"),
     path("logout", LogoutView.as_view(), name="logout"),
     path("me", MeView.as_view(), name="me"),
-    path("rbac/admin", AdminOnlyView.as_view, name="rbac-admin"),
+    path("rbac/admin", AdminOnlyView.as_view(), name="rbac-admin"),
     path("rbac/reviewer", ReviewerAreaView.as_view(), name="rbac-reviewer"),
     path("rbac/audit", AuditReadView.as_view(), name="rbac-audit"),   
 ]
