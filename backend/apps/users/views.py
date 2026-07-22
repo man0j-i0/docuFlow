@@ -1,3 +1,4 @@
+from apps.core.permissions import IsAdmin, IsAdminOrReviewer, IsAuditorReadOnly
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
@@ -58,3 +59,36 @@ class LogoutView(APIView):
             )
 
         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+@extend_schema(
+    tags=["rbac-demo"],
+    summary="Admin only"
+)
+class AdminOnlyView(APIView):
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        return Response({"ok": True, "seen_by": request.user.role})
+    
+
+@extend_schema(
+    tags=["rbac-demo"],
+    summary="Admin or reviewer"
+)
+class ReviewerAreaView(APIView):
+    permission_classes = [IsAdminOrReviewer]
+
+    def get(self, request):
+        return Response({"ok": True, "seen_by": request.user.role})
+    
+
+@extend_schema(
+    tags=["rbac-demo"],
+    summary="Auditor read-only"
+)
+class AuditReadView(APIView):
+    permission_classes = [IsAuditorReadOnly]
+
+    def get(self, request):
+        return Response({"ok": True, "seen_by": request.user.role})    
