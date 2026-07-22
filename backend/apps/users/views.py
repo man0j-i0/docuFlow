@@ -77,7 +77,7 @@ class AdminOnlyView(APIView):
     summary="Admin or reviewer"
 )
 class ReviewerAreaView(APIView):
-    permission__classes = [IsAdminOrReviewer]
+    permission_classes = [IsAdminOrReviewer]
 
     def get(self, request):
         return Response({"ok": True, "seen_by": request.user.role})
