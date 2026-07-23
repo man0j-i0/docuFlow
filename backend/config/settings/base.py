@@ -40,6 +40,7 @@ LOCAL_APPS = [
     "apps.core",
     "apps.users",
     "apps.applications",
+    "apps.documents",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -114,6 +115,8 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 # --- Object storage (MinIO / S3) ---
 
 S3_ENDPOINT_URL = env("S3_ENDPOINT_URL", default="http://localhost:9000")
+S3_PUBLIC_ENDPOINT_URL = env("S3_PUBLIC_ENDPOINT_URL", default="http://localhost:9000")
+S3_PRESIGN_EXPIRY = env.int("S3_PRESIGN_EXPIRY", default=3600)
 S3_BUCKET_NAME = env("S3_BUCKET_NAME", default="docuflow-documents")
 S3_ACCESS_KEY = env("S3_ACCESS_KEY", default="docuflow")
 S3_SECRET_KEY = env("S3_SECRET_KEY", default="docuflow123")
