@@ -5,13 +5,13 @@ import { tokenStore } from '@/lib/tokens'
 interface AuthState {
     user: User | null
     isAuthenticated: boolean
-    isIntitializing: boolean
+    isInitializing: boolean
 }
 
 const initialState: AuthState = {
     user: null,
     isAuthenticated: Boolean(tokenStore.getAccess()),
-    isIntitializing: Boolean(tokenStore.getAccess()),
+    isInitializing: Boolean(tokenStore.getAccess()),
 }
 
 const authSlice = createSlice({
@@ -23,21 +23,21 @@ const authSlice = createSlice({
             tokenStore.set(access, refresh)
             state.user = user
             state.isAuthenticated = true
-            state.isIntitializing = false
+            state.isInitializing = false
         },
 
         // Session restored from a stored token on page load.
         userLoaded(state, action: PayloadAction<User>) {
             state.user = action.payload
             state.isAuthenticated = true
-            state.isIntitializing = false
+            state.isInitializing = false
         },
 
         loggedOut(state) {
             tokenStore.clear()
             state.user = null
             state.isAuthenticated = false
-            state.isIntitializing = false
+            state.isInitializing = false
         },
     },
 })
