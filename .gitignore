@@ -1,3 +1,7 @@
+# --- Test artifacts ---
+/test.pdf
+/roundtrip.pdf
+
 # --- Environment ---
 .env
 .env.local
