@@ -9,7 +9,6 @@
     "skipLibCheck": true,
 
     /* Path alias — must mirror resolve.alias in vite.config.ts */
-    "baseUrl": ".",
     "paths": { "@/*": ["./src/*"] },
 
     /* Bundler mode */

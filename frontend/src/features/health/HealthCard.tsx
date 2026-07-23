@@ -15,7 +15,7 @@ import type { HealthCheck } from './types'
 
 function CheckRow({ label, check }: { label: string; check: HealthCheck }) {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between">
+    <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Typography variant="body2" color="text.secondary">
         {label}
       </Typography>
@@ -40,7 +40,7 @@ export function HealthCard() {
         </Typography>
 
         {isPending && (
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mt: 1 }}>
+          <Stack direction="row" spacing={1.5} sx={{ mt: 1, alignItems: 'center' }}>
             <CircularProgress size={18} />
             <Typography variant="body2">Checking…</Typography>
           </Stack>
@@ -49,7 +49,7 @@ export function HealthCard() {
         {isError && (
           <Alert severity="error" sx={{ mt: 1 }}>
             API unreachable — is Django running on :8000?
-            <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+            <Typography variant="caption" sx={{ mt: 0.5, display: 'block' }}>
               {error instanceof Error ? error.message : 'Unknown error'}
             </Typography>
           </Alert>
@@ -57,7 +57,7 @@ export function HealthCard() {
 
         {data && (
           <>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1, mb: 2 }}>
+            <Stack direction="row" spacing={1} sx={{ mt: 1, mb: 2, alignItems: 'center' }}>
               {data.status === 'ok' ? (
                 <CheckCircleIcon color="success" />
               ) : (
