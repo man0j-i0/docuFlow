@@ -5,7 +5,7 @@ export function HomePage() {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 8 }}>
-        <Typography variant="h3" fontWeight={700} gutterBottom>
+        <Typography variant="h3" gutterBottom sx={{ fontWeight: 700 }}>
           DocuFlow
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 5 }}>
