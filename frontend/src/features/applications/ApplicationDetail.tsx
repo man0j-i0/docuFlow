@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import { Alert, Box, CircularProgress, Divider, Paper, Stack, Typography } from '@mui/material'
 import { useApplication } from './hooks'
 import { StatusChip } from './StatusChip'
-
+import { DocumentsPanel } from '@/features/documents/DocumentsPanel'
 export function ApplicationDetail() {
   const { id = '' } = useParams()
   const { data: app, isPending, isError } = useApplication(id)
@@ -41,7 +41,7 @@ export function ApplicationDetail() {
         </Stack>
       </Paper>
 
-      {/* Documents panel + upload land here in PR 4. */}
+    <DocumentsPanel applicationId={app.id} />
     </Box>
   )
 }
