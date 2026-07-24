@@ -4,7 +4,9 @@ import { ProtectedRoute } from '@/app/routes/ProtectedRoute'
 import { RoleRoute } from '@/app/routes/RoleRoute'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { useAuthBootstrap } from '@/features/auth/useAuth'
-import { HomePage } from '@/pages/HomePage'
+import { ApplicationsList } from '@/features/applications/ApplicationsList'
+import { ApplicationDetail } from '@/features/applications/ApplicationDetail'
+
 
 function AdminPage() {
   return <p>Admin area — admins only.</p>
@@ -25,7 +27,8 @@ export default function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<ApplicationsList />} />
+          <Route path="/applications/:id" element={<ApplicationDetail />} />
 
           <Route element={<RoleRoute allow={['admin']} />}>
             <Route path="/admin" element={<AdminPage />} />
