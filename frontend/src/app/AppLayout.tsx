@@ -15,7 +15,6 @@ import type { Role } from '@/features/auth/types'
 const NAV: Array<{ label: string; to: string; roles: Role[] }> = [
   { label: 'Dashboard', to: '/', roles: ['admin', 'reviewer', 'auditor'] },
   { label: 'Admin', to: '/admin', roles: ['admin'] },
-  { label: 'Review', to: '/review', roles: ['admin', 'reviewer'] },
   { label: 'Audit', to: '/audit', roles: ['admin', 'auditor'] },
 ]
 

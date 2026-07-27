@@ -8,6 +8,11 @@ export async function listDocuments(applicationId: string): Promise<Document[]> 
   return data.results as Document[]
 }
 
+export async function getDocument(id: string): Promise<Document> {
+  const { data } = await api.get<Document>(`/documents/${id}`)
+  return data
+}
+
 export async function presignUpload(
   applicationId: string,
   filename: string,

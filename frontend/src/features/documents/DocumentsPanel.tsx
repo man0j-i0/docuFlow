@@ -1,7 +1,8 @@
 import {
-  Alert, Box, Chip, CircularProgress, IconButton, LinearProgress, List, ListItem,
-  ListItemText, Paper, Typography,
+  Alert, Box, Button, Chip, CircularProgress, IconButton, LinearProgress, List, ListItem,
+  ListItemText, Paper, Stack, Typography,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import type { DocumentStatus } from './types'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { UploadDropzone } from './UploadDropzone'
@@ -54,10 +55,12 @@ function UploadRow({ item, onRetry }: { item: UploadItem; onRetry: (id: string) 
 
 export function DocumentsPanel({ applicationId }: { applicationId: string }) {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const { items, addFiles, retry } = useUploadManager(applicationId)
   const { data: documents, isPending } = useDocuments(applicationId)
 
-  const canUpload = user?.role === 'admin' || user?.role === 'reviewer'
+  const canReview = user?.role === 'admin' || user?.role === 'reviewer'
+  const canUpload = canReview
   const activeUploads = items.filter((it) => it.phase !== 'done')
 
   return (
@@ -85,7 +88,20 @@ export function DocumentsPanel({ applicationId }: { applicationId: string }) {
               {documents.map((doc) => (
                 <ListItem
                   key={doc.id}
-                  secondaryAction={<DocStatusChip status={doc.status} />}
+                  secondaryAction={
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                      {canReview && doc.status === 'extracted' && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => navigate(`/documents/${doc.id}/review`)}
+                        >
+                          Review
+                        </Button>
+                      )}
+                      <DocStatusChip status={doc.status} />
+                    </Stack>
+                  }
                 >
                   <ListItemText
                     primary={`${doc.filename} (v${doc.version})`}
