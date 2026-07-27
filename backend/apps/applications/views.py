@@ -1,6 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status as http_status
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.response import Response
 
 from apps.core.permissions import IsAdminOrReviewer
 
@@ -24,5 +27,25 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAdminOrReviewer])
+    def submit_review(self, request, pk=None):
+        """Reviewer submits their review: review -> pending_approval.
+
+        Rejects the transition with 409 from any other state — a preview of the
+        Phase 5 state machine. 409 (not 400) because the request is well-formed;
+        it just conflicts with the application's current state.
+        """
+        application = self.get_object()
+
+        if application.status != Application.Status.REVIEW:
+            return Response(
+                {"detail": f"Can only submit from 'review', not '{application.status}'."},
+                status=http_status.HTTP_409_CONFLICT,
+            )
+
+        application.status = Application.Status.PENDING_APPROVAL
+        application.save(update_fields=["status", "updated_at"])
+        return Response(self.get_serializer(application).data)
 
     
