@@ -1,8 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
-import { listDocuments } from './api'
+import { getDocument, listDocuments } from './api'
 
 export const documentKeys = {
   forApplication: (applicationId: string) => ['documents', applicationId] as const,
+  detail: (documentId: string) => ['document', documentId] as const,
+}
+
+export function useDocument(documentId: string) {
+  return useQuery({
+    queryKey: documentKeys.detail(documentId),
+    queryFn: () => getDocument(documentId),
+    enabled: Boolean(documentId),
+  })
 }
 
 export function useDocuments(applicationId: string) {

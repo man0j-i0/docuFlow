@@ -6,13 +6,11 @@ import { LoginPage } from '@/features/auth/LoginPage'
 import { useAuthBootstrap } from '@/features/auth/useAuth'
 import { ApplicationsList } from '@/features/applications/ApplicationsList'
 import { ApplicationDetail } from '@/features/applications/ApplicationDetail'
+import { ReviewPage } from '@/features/review/ReviewPage'
 
 
 function AdminPage() {
   return <p>Admin area — admins only.</p>
-}
-function ReviewPage() {
-  return <p>Review queue — admins and reviewers.</p>
 }
 function AuditPage() {
   return <p>Audit log — admins and auditors.</p>
@@ -35,7 +33,7 @@ export default function App() {
           </Route>
 
           <Route element={<RoleRoute allow={['admin', 'reviewer']} />}>
-            <Route path="/review" element={<ReviewPage />} />
+            <Route path="/documents/:documentId/review" element={<ReviewPage />} />
           </Route>
 
           <Route element={<RoleRoute allow={['admin', 'auditor']} />}>
