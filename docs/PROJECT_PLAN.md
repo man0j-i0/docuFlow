@@ -1,32 +1,32 @@
 # DocuFlow — Project Plan & Roadmap
 
-Balanced full-stack build, daily cadence, optimized to become **resume-listable as early as honestly possible**, then hardened.
+A phased full-stack build. Each phase ends in something that runs and demos —
+never a half-migration.
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the system design this plan builds.
 
 ---
 
-## The key idea: the "resume-ready" checkpoint
+## The MVP checkpoint
 
-You do **not** wait until everything is done to put this on your resume. The moment the core loop works end-to-end, is public, and has a README + demo, it is a legitimate, defensible project. That happens at the end of **Phase 4** — roughly **week 3** at a daily cadence.
-
-Everything after that makes it *stronger*, but you're already listing it and answering interview questions from it.
+The core vertical slice — upload → extract → review → submit — is complete at
+the end of **Phase 4**. That's the first fully demoable milestone: a stranger
+can clone, `docker compose up`, and run the whole loop. Everything after Phase 4
+hardens and extends it.
 
 ```
-Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
- P0/P1     P2/P3       P4          P5/P6      P7 polish
-                        ▲
-                RESUME-READY CHECKPOINT
-                (public + README + demo)
+Phase 0/1 ──▶ Phase 2/3 ──▶ Phase 4 ──▶ Phase 5/6 ──▶ Phase 7
+                              ▲
+                        MVP CHECKPOINT
+                       (public + README + demo)
 ```
 
 ---
 
-## Cadence & sizing assumptions
+## Sizing assumptions
 
-- ~1.5–3 focused hrs/day, most days, alongside interview prep.
-- Phases are sequential but each ends in something that **runs and demos** — never a half-migration.
-- Timeline below is realistic-daily. If you have a heavy weekend, you'll beat it.
+- Phases are sequential; each ends in a running, demoable state.
+- Estimates are rough and assume a steady daily cadence.
 
 ---
 
@@ -42,7 +42,7 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] `drf-spectacular` serving Swagger at `/api/docs`.
 
 **Done when:** you can up the stack, load the React page, and it shows a green health check from Django.
-**Interview payload:** Docker Compose, service topology, Celery/broker wiring.
+**Engineering focus:** Docker Compose, service topology, Celery/broker wiring.
 
 ---
 
@@ -57,7 +57,7 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Seed script: one user per role.
 
 **Done when:** you log in as each role and see different nav; API rejects unauthorized calls with 403.
-**Interview payload:** JWT vs sessions, refresh-token strategy, where RBAC is *actually* enforced.
+**Engineering focus:** JWT vs sessions, refresh-token strategy, where RBAC is *actually* enforced.
 
 ---
 
@@ -70,7 +70,7 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Frontend: applications list + detail, react-dropzone upload with progress, document list.
 
 **Done when:** upload a PDF → it's in MinIO → appears in the UI with status `uploaded`.
-**Interview payload:** object storage vs blobs-in-DB, presigned URLs, file versioning.
+**Engineering focus:** object storage vs blobs-in-DB, presigned URLs, file versioning.
 
 ---
 
@@ -86,11 +86,11 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] (Optional now, easy later) real backend: Tesseract OCR + Claude API prompt template behind the same interface.
 
 **Done when:** upload → within seconds the app flips to `review` and fields appear; killing/failing a job shows retries then a dead-letter state.
-**Interview payload:** RabbitMQ, Celery, retries/backoff, dead-letter, idempotency, timeouts, the pluggable-AI design. **This is the phase you'll talk about most — build it carefully.**
+**Engineering focus:** RabbitMQ, Celery, retries/backoff, dead-letter, idempotency, timeouts, the pluggable-AI design. This is the most involved phase — build it carefully.
 
 ---
 
-## Phase 4 — Human review UI (≈ 4–5 days) → 🎯 RESUME-READY
+## Phase 4 — Human review UI (≈ 4–5 days) → 🎯 MVP
 
 **Goal:** a reviewer opens a document, sees fields highlighted, and accepts/edits/rejects.
 
@@ -98,11 +98,10 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Review screen: document viewer + `bbox` highlight overlay + field side-panel with confidence badges.
 - [ ] Accept/edit/reject controls; low-confidence fields visually flagged.
 - [ ] Submit review → app moves to `pending_approval`.
-- [ ] **Write the README, record a 5-min demo, push public.**
+- [ ] **Write the README, record a demo, push public.**
 
 **Done when:** the full loop runs — upload → extract → review → submit — and a stranger can clone, `compose up`, and try it.
-**➡️ At this point: put it on your resume.**
-**Interview payload:** the end-to-end product story, optimistic UI + mutation invalidation (TanStack Query), rendering AI confidence to humans.
+**Engineering focus:** the end-to-end product story, optimistic UI + mutation invalidation (TanStack Query), rendering AI confidence to humans.
 
 ---
 
@@ -116,7 +115,7 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Frontend: workflow status timeline, audit log viewer.
 
 **Done when:** you can't skip states via the API, and the audit view shows who changed what, when, from→to.
-**Interview payload:** state machines, transactional audit integrity, append-only logs.
+**Engineering focus:** state machines, transactional audit integrity, append-only logs.
 
 ---
 
@@ -130,7 +129,7 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Comments on documents.
 
 **Done when:** the dashboard reflects real activity and reviewers get notified when work lands.
-**Interview payload:** aggregation queries, cached metrics, event-driven notifications.
+**Engineering focus:** aggregation queries, cached metrics, event-driven notifications.
 
 ---
 
@@ -145,40 +144,19 @@ Week 1 ──▶ Week 2 ──▶ Week 3 ──▶ Week 4 ──▶ Week 5+
 - [ ] Structured logging + correlation id; `/healthz` + `/readyz`.
 - [ ] Docs: finish README (architecture, trade-offs, how-to-run), embed the ER + sequence diagrams, link Swagger, polish the demo video.
 
-**Done when:** CI is green, a fresh clone runs, and the README could stand alone in an interview.
-**Interview payload:** testing strategy, CI/CD, MSW, why you tested what you tested.
+**Done when:** CI is green, a fresh clone runs, and the README stands on its own.
+**Engineering focus:** testing strategy, CI/CD, MSW, why you tested what you tested.
 
 ---
 
 ## Timeline summary
 
-| Milestone | Phases | Daily-cadence estimate |
+| Milestone | Phases | Estimate |
 |---|---|---|
-| Stack runs | P0 | end of week 1 |
+| Stack runs | P0 | week 1 |
 | Auth + upload | P1–P2 | ~week 2 |
-| **Pipeline + review = RESUME-READY** | P3–P4 | **~week 3** |
+| **Pipeline + review = MVP** | P3–P4 | **~week 3** |
 | Workflow + audit + dashboard | P5–P6 | ~week 4–5 |
 | Polished, tested, CI, docs | P7 | ~week 5–6 |
 
-**≈ 3 weeks to listable, ≈ 5–6 weeks to polished.** Extras from the original spec stay in the deferred backlog in ARCHITECTURE.md §11.
-
----
-
-## Interview-prep integration (since you're doing both)
-
-This project *is* your study guide. As you build each phase, you're rehearsing its questions live:
-
-- **Phase 1** → JWT vs sessions, refresh rotation, RBAC placement, CORS.
-- **Phase 3** → message queues, at-least-once delivery, retries/backoff, idempotency, dead-letter — the highest-value backend topics.
-- **Phase 4** → React rendering, controlled inputs, TanStack Query cache/invalidation, optimistic updates.
-- **Phase 5** → transactions, isolation, ACID, state modeling.
-- **Phase 6** → SQL aggregation, N+1 avoidance, caching strategy.
-- **Phase 7** → testing pyramid, CI/CD, mocking boundaries.
-
-Keep a running `docs/INTERVIEW_NOTES.md`: after each phase, write the 3–5 questions it prepares you for and your answer. By the end you have a study doc *and* a portfolio.
-
----
-
-## Immediate next step
-
-When you're ready to build, we start at **Phase 0**: scaffold the repo and get `docker compose up` green. Say the word and I'll generate it.
+Extras from the original spec stay in the deferred backlog in ARCHITECTURE.md §11.

@@ -62,13 +62,13 @@ flowchart LR
     BEAT --> MQ
 ```
 
-Every box in that diagram maps to a line on your resume, and every arrow is an interview question. That's the point of the design.
+Each component is deliberately chosen and independently justified — the design favours clear boundaries between the API, the async worker, and the infrastructure it depends on.
 
 ---
 
 ## 3. Tech stack & why
 
-| Layer | Choice | Why (the interview answer) |
+| Layer | Choice | Why |
 |---|---|---|
 | Frontend | React 19 + TypeScript + Vite | Modern, fast dev loop, type safety across API boundary |
 | Client state | Redux Toolkit | Auth/session/UI state; shows you know when *not* to use it |
@@ -294,7 +294,7 @@ Three roles, enforced by DRF permission classes (not frontend-only):
 | View audit log | ✓ | — | ✓ |
 | View dashboard | ✓ | ✓ | ✓ |
 
-The frontend hides what a role can't do; the API is the real gate. Say exactly that in interviews.
+The frontend hides what a role can't do; the API is the real gate. Client-side guards are UX only — authorization is always enforced server-side.
 
 ---
 
@@ -318,7 +318,7 @@ The frontend hides what a role can't do; the API is the real gate. Say exactly t
 
 ## 11. What is deliberately NOT in the MVP
 
-Cut on purpose (keep as a documented backlog — this list is itself an interview asset):
+Cut on purpose, and kept as a documented backlog — scoping decisions made deliberately rather than by omission:
 
 Module Federation · Slack/webhook fan-out beyond one webhook · Elasticsearch (use Postgres full-text) · Prometheus/Grafana dashboards · Jenkins (GitHub Actions only) · chunked upload + virus scan · WebSocket live updates (poll first) · multi-tenant orgs.
 
