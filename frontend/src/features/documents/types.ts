@@ -19,6 +19,18 @@ export interface PresignResponse {
   expires_in: number
 }
 
+export type JobStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'dead'
+
+export interface ExtractionJob {
+  id: string
+  document: string
+  status: JobStatus
+  attempts: number
+  error: string
+  started_at: string | null
+  finished_at: string | null
+}
+
 // Client-side per-file upload state — never sent to the server.
 export type UploadPhase = 'queued' | 'presigning' | 'uploading' | 'completing' | 'done' | 'error'
 

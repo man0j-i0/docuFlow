@@ -1,7 +1,8 @@
 import {
-  Alert, Box, Chip, IconButton, LinearProgress, List, ListItem,
+  Alert, Box, Chip, CircularProgress, IconButton, LinearProgress, List, ListItem,
   ListItemText, Paper, Typography,
 } from '@mui/material'
+import type { DocumentStatus } from './types'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { UploadDropzone } from './UploadDropzone'
 import { useUploadManager } from './useUploadManager'
@@ -13,6 +14,15 @@ function formatSize(bytes: number | null) {
   if (!bytes) return '—'
   const kb = bytes / 1024
   return kb < 1024 ? `${kb.toFixed(1)} KB` : `${(kb / 1024).toFixed(1)} MB`
+}
+
+function DocStatusChip({ status }: { status: DocumentStatus }) {
+  // In-flight states show a spinner; the polling hook refetches until they settle.
+  if (status === 'extracting' || status === 'pending') {
+    return <Chip size="small" icon={<CircularProgress size={12} />} label={status} />
+  }
+  const color = status === 'extracted' ? 'success' : status === 'failed' ? 'error' : 'default'
+  return <Chip size="small" label={status} color={color} />
 }
 
 function UploadRow({ item, onRetry }: { item: UploadItem; onRetry: (id: string) => void }) {
@@ -75,7 +85,7 @@ export function DocumentsPanel({ applicationId }: { applicationId: string }) {
               {documents.map((doc) => (
                 <ListItem
                   key={doc.id}
-                  secondaryAction={<Chip size="small" label={doc.status} />}
+                  secondaryAction={<DocStatusChip status={doc.status} />}
                 >
                   <ListItemText
                     primary={`${doc.filename} (v${doc.version})`}
