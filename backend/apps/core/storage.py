@@ -41,3 +41,9 @@ def presigned_get(key: str) -> str:
 def head_object(key: str) -> dict:
     """Size + ETag, used to confirm an upload actually landed."""
     return internal_client().head_object(Bucket=settings.S3_BUCKET_NAME, Key=key)
+
+
+def get_object_bytes(key: str) -> bytes:
+    """Download an object's bytes. Used by the extraction worker."""
+    response = internal_client().get_object(Bucket=settings.S3_BUCKET_NAME, Key=key)
+    return response["Body"].read()

@@ -1,4 +1,5 @@
 from botocore.exceptions import ClientError
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
@@ -8,6 +9,8 @@ from rest_framework.response import Response
 from apps.applications.models import Application
 from apps.core.permissions import IsAdminOrReviewer
 from apps.core.storage import head_object, presigned_get, presigned_put
+from apps.extraction.models import ExtractionJob
+from apps.extraction.tasks import extract_document
 
 from .models import Document
 from .serializers import DocumentSerializer, DocumentUploadRequestSerializer
@@ -42,15 +45,23 @@ class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        document.size_bytes = head["ContentLength"]
-        document.checksum = head["ETag"].strip('"')
-        document.status = Document.Status.UPLOADED
-        document.save(update_fields=["size_bytes", "checksum", "status", "updated_at"])
+        with transaction.atomic():
+            document.size_bytes = head["ContentLength"]
+            document.checksum = head["ETag"].strip('"')
+            document.status = Document.Status.EXTRACTING
+            document.save(
+                update_fields=["size_bytes", "checksum", "status", "updated_at"]
+            )
 
-        app = document.application
-        if app.status == Application.Status.DRAFT:
-            app.status = Application.Status.UPLOADED
-            app.save(update_fields=["status", "updated_at"])
+            app = document.application
+            if app.status in (Application.Status.DRAFT, Application.Status.UPLOADED):
+                app.status = Application.Status.EXTRACTING
+                app.save(update_fields=["status", "updated_at"])
+
+            job = ExtractionJob.objects.create(document=document)
+            # Enqueue only after the transaction commits, so the worker (a
+            # separate process) can't query for the job row before it's durable.
+            transaction.on_commit(lambda: extract_document.delay(str(job.id)))
 
         return Response(DocumentSerializer(document).data)
 
