@@ -17,7 +17,7 @@ class IsReviewer(BasePermission):
         return bool(user and user.is_authenticated and user.is_reviewer)
     
 
-class IsAudtior(BasePermission):
+class IsAuditor(BasePermission):
     message = "Auditor role required."
 
     def has_permission(self, request, view):
