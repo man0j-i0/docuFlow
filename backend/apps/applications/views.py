@@ -9,6 +9,7 @@ from apps.core.permissions import IsAdminOrReviewer
 
 from .models import Application
 from .serializers import ApplicationSerializer
+from .workflow import InvalidTransition, transition
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer
@@ -30,22 +31,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"], permission_classes=[IsAdminOrReviewer])
     def submit_review(self, request, pk=None):
-        """Reviewer submits their review: review -> pending_approval.
-
-        Rejects the transition with 409 from any other state — a preview of the
-        Phase 5 state machine. 409 (not 400) because the request is well-formed;
-        it just conflicts with the application's current state.
-        """
         application = self.get_object()
-
-        if application.status != Application.Status.REVIEW:
-            return Response(
-                {"detail": f"Can only submit from 'review', not '{application.status}'."},
-                status=http_status.HTTP_409_CONFLICT,
-            )
-
-        application.status = Application.Status.PENDING_APPROVAL
-        application.save(update_fields=["status", "updated_at"])
+        try:
+            transition(application, Application.Status.PENDING_APPROVAL, actor=request.user)
+        except InvalidTransition as exc:
+            return Response({"detail": str(exc)}, status=http_status.HTTP_409_CONFLICT)    
         return Response(self.get_serializer(application).data)
-
-    
