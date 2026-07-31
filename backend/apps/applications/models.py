@@ -32,3 +32,21 @@ class Application(UUIDModel, TimeStampModel):
 
     def __str__(self):
         return f"{self.title} ({self.status})"
+
+
+class StateTransition(UUIDModel, TimeStampModel):
+    application = models.ForeignKey(
+        Application, on_delete=models.CASCADE, related_name="transitions"
+    )
+    from_state = models.CharField(max_length=32, choices=Application.Status.choices)
+    to_state = models.CharField(max_length=32, choices=Application.Status.choices)
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="transitions", null=True, blank=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["application", "-created_at"])]
+
+    def __str__(self):
+        return f"{self.application.id}: {self.from_state} -> {self.to_state}"
