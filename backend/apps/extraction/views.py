@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
-
+from django.db import transaction
 from apps.core.permissions import IsAdminOrReviewer
-
+from apps.audit.services import record
 from .models import ExtractedField, ExtractionJob
 from .serializers import ExtractedFieldSerializer, ExtractionJobSerializer
 
@@ -37,3 +37,16 @@ class ExtractedFieldViewSet(
         if self.request.method == "PATCH":
             return [IsAdminOrReviewer()]
         return super().get_permissions()
+
+    def perform_update(self, serializer):
+        instance = serializer.instance
+        old = {"status": instance.status, "corrected_value": instance.corrected_value}
+        with transaction.atomic():
+            field = serializer.save()
+            record(
+                action=f"field.{field.status}",
+                entity=field,
+                actor=self.request.user,
+                old_value=old,
+                new_value={"status": field.status, "corrected_value": field.corrected_value},
+            )

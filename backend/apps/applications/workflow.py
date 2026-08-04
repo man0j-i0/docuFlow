@@ -1,7 +1,7 @@
 from django.db import transaction
 
 from .models import Application, StateTransition
-
+from apps.audit.services import record
 
 TRANSITIONS: dict[str, set[str]] = {
     Application.Status.DRAFT: {Application.Status.UPLOADED},
@@ -42,5 +42,12 @@ def transition(application: Application, to_state: str, actor=None) -> Applicati
             from_state=from_state,
             to_state=to_state,
             actor=actor,
+        )
+        record(
+            action=f"application.{to_state}",
+            entity=application,
+            actor=actor,
+            old_value={"status": from_state},
+            new_value={"status": to_state},
         )
     return application
