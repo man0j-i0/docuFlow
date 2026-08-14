@@ -3,6 +3,8 @@ import { Alert, Box, CircularProgress, Divider, Paper, Stack, Typography } from 
 import { useApplication } from './hooks'
 import { StatusChip } from './StatusChip'
 import { DocumentsPanel } from '@/features/documents/DocumentsPanel'
+import { WorkflowPanel } from '@/features/workflow/WorkflowPanel'
+
 export function ApplicationDetail() {
   const { id = '' } = useParams()
   const { data: app, isPending, isError } = useApplication(id)
@@ -41,6 +43,7 @@ export function ApplicationDetail() {
         </Stack>
       </Paper>
 
+    <WorkflowPanel applicationId={app.id} status={app.status} />
     <DocumentsPanel applicationId={app.id} />
     </Box>
   )

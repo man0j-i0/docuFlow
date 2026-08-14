@@ -7,13 +7,11 @@ import { useAuthBootstrap } from '@/features/auth/useAuth'
 import { ApplicationsList } from '@/features/applications/ApplicationsList'
 import { ApplicationDetail } from '@/features/applications/ApplicationDetail'
 import { ReviewPage } from '@/features/review/ReviewPage'
+import { AuditPage } from '@/features/audit/AuditPage'
 
 
 function AdminPage() {
   return <p>Admin area — admins only.</p>
-}
-function AuditPage() {
-  return <p>Audit log — admins and auditors.</p>
 }
 
 export default function App() {
