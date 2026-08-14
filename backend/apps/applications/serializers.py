@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apps.users.serializers import UserSerializer
 
-from .models import Application
+from .models import Application, StateTransition
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -26,4 +26,22 @@ class ApplicationSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at"
         )
+
+
+class StateTransitionSerializer(serializers.ModelSerializer):
+    actor_email = serializers.EmailField(source="actor.email", default=None, read_only=True)
+
+    class Meta:
+        model = StateTransition
+        fields = (
+            "id",
+            "application",
+            "from_state",
+            "to_state",
+            "actor",
+            "actor_email",
+            "created_at",
+        )
+
+        read_only_fields = fields            
 

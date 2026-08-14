@@ -7,8 +7,8 @@ from rest_framework.response import Response
 
 from apps.core.permissions import IsAdminOrReviewer
 
-from .models import Application
-from .serializers import ApplicationSerializer
+from .models import Application, StateTransition
+from .serializers import ApplicationSerializer, StateTransitionSerializer
 from .workflow import InvalidTransition, transition
 from apps.core.permissions import IsAdmin
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -60,4 +60,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             transition(application, to_state, actor=self.request.user)
         except InvalidTransition as exc:
             return Response({"detail": str(exc)}, status=http_status.HTTP_409_CONFLICT)
-        return Response(self.get_serializer(application).data)    
+        return Response(self.get_serializer(application).data)
+
+
+class StateTransitionViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = StateTransitionSerializer
+    filterset_fields = ["application"]
+    ordering_fields = ["created_at"]
+
+    def get_queryset(self):
+        return StateTransition.objects.select_related("actor").all()        
