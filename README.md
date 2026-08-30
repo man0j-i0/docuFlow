@@ -1,5 +1,7 @@
 # DocuFlow
 
+![CI](https://github.com/man0j-i0/docuFlow/actions/workflows/ci.yml/badge.svg)
+
 **An AI-assisted enterprise document-workflow platform.** Upload a document, an
 async pipeline extracts structured fields with confidence scores, a human
 reviewer accepts/edits/rejects them, and the application advances through a
